@@ -1,18 +1,21 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { ensureAuthenticateClient } from "../middlewares/ensureAuthenticateClient";
-import { AuthenticateClientController } from "../modules/account/controllers/AuthenticateClientController";
-import { CreateClientController } from "../modules/clients/controllers/CreateClient.controller";
-import { FindAllDeliveriesController } from "../modules/clients/controllers/FindAllDeliveries.controller";
+import { authenticateClientController } from "../modules/account";
+import { createClientController, findAllDeliveriesController } from '../modules/clients/index';
 
 const clientRoute = Router();
 
-const createClientController = new CreateClientController();
-const authenticateClientController = new AuthenticateClientController();
-const findAllDeliveriesController = new FindAllDeliveriesController();
 
-clientRoute.post('/client/', createClientController.handle);
-clientRoute.post('/client/authenticate/', authenticateClientController.handle);
-clientRoute.get('/client/deliveries/', ensureAuthenticateClient, findAllDeliveriesController.handle)
+clientRoute.post('/client/',
+    (request: Request, response: Response) =>
+        createClientController.handle(request, response));
+clientRoute.post('/client/authenticate/',
+    (request: Request, response: Response) =>
+        authenticateClientController.handle(request, response));
+clientRoute.get(
+    '/client/deliveries/',
+    ensureAuthenticateClient,
+    (request: Request, response: Response) => findAllDeliveriesController.handle(request, response))
 
 
 export { clientRoute };

@@ -1,16 +1,13 @@
 import { Request, Response } from "express";
-import { PrismaDeliveriesRepository } from "../../prisma/prisma-deliveries.repository";
 import { FindAllAvailableUseCase } from "../useCases/FindAllAvailableUseCase";
 
 export class FindAllAvailableController {
 
+    constructor(private findAllAvailableUseCase: FindAllAvailableUseCase) { }
+
     async handle(request: Request, response: Response) {
 
-        const databaseDeliveryRepository = new PrismaDeliveriesRepository()
-
-        const findAllAvailableUseCase = new FindAllAvailableUseCase(databaseDeliveryRepository)
-
-        const deliveries = await findAllAvailableUseCase.execute();
+        const deliveries = await this.findAllAvailableUseCase.execute();
 
         return response.status(200).send({
             status: 200,

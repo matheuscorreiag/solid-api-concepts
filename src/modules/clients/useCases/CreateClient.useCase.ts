@@ -13,7 +13,7 @@ export class CreateClientUseCase {
 
     async execute({ username, password }: CreateClient) {
 
-        const client = this.databaseRepository.createClient({ username, password })
+        const client = await this.databaseRepository.createClient({ username, password })
 
 
         return client

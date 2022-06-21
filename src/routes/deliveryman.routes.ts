@@ -1,18 +1,20 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { ensureAuthenticateDeliveryman } from "../middlewares/ensureAuthenticateDeliveryman";
-import { AuthenticateDeliverymanController } from "../modules/account/controllers/AuthenticateDeliverymanController";
-import { CreateDeliverymanController } from "../modules/deliveryman/controllers/CreateDeliverymanController";
-import { FindAllDeliveriesDeliverymanController } from "../modules/deliveryman/controllers/FindAllDeliveriesDeliverymanController";
+import { authenticateDeliverymanController, createDeliverymanController, findAllDeliveriesDeliverymanController } from "../modules/deliveryman";
 
-const authenticateDeliverymanController = new AuthenticateDeliverymanController();
-const createDeliverymanController = new CreateDeliverymanController();
-const findAllDeliveriesDeliverymanController = new FindAllDeliveriesDeliverymanController();
 
 const deliverymanRoutes = Router();
 
-deliverymanRoutes.post('/deliveryman/', createDeliverymanController.handle)
-deliverymanRoutes.post('/deliveryman/authenticate/', authenticateDeliverymanController.handle)
-deliverymanRoutes.get('/deliveryman/deliveries/', ensureAuthenticateDeliveryman, findAllDeliveriesDeliverymanController.handle)
+deliverymanRoutes.post('/deliveryman/',
+    (request: Request, response: Response) =>
+        createDeliverymanController.handle(request, response))
+deliverymanRoutes.post('/deliveryman/authenticate/',
+    (request: Request, response: Response) =>
+        authenticateDeliverymanController.handle(request, response))
+deliverymanRoutes.get('/deliveryman/deliveries/',
+    ensureAuthenticateDeliveryman,
+    (request: Request, response: Response) =>
+        findAllDeliveriesDeliverymanController.handle(request, response))
 
 export { deliverymanRoutes };
 
